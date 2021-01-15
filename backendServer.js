@@ -24,7 +24,16 @@ app.get ('/', (req, res) => {
   res.send('MAIN PAGE ONLINE')
 })
 
-
+app.get('/databasePROBA', (req, res) => {
+  conn.query('SELECT * FROM ????tablename????;', (err, rows) => {
+    if (err) {
+      res.status(500).json({error: 'Database error occured'});
+      return
+    } else {
+      res.json(rows);
+    }
+  })
+})
 
 
 
