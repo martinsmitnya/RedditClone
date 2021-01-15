@@ -18,14 +18,16 @@ conn.connect((err) => {
   if (err) throw err;
   console.log('Succesfully Connected To - redditclone - DataBase');
 });
-//DataBase redditclone CONNECTED but HAS NO dataTABLES!
+
+//DataBase redditclone CONNECTED and is ready to serve data! 
+
 
 app.get ('/', (req, res) => {
-  res.send('MAIN PAGE ONLINE')
+  res.send('MAIN PAGE CONNECTED');
 })
 
 app.get('/databasePROBA', (req, res) => {
-  conn.query('SELECT * FROM ????tablename????;', (err, rows) => {
+  conn.query('SELECT * FROM posts_table;', (err, rows) => {
     if (err) {
       res.status(500).json({error: 'Database error occured'});
       return
@@ -34,6 +36,13 @@ app.get('/databasePROBA', (req, res) => {
     }
   })
 })
+
+//Get posts endpoint  /posts
+ 
+//Get uniq post endpoint /posts/:id
+//Add posts endpoint  /postsAdd/ ??? (maybe we need PUT /posts and separate GET /posts)
+//Downvote endpoint /posts/:id/downvote
+//Upvote   endpoint /posts/:id/upvote
 
 
 
