@@ -62,7 +62,7 @@ app.post('/posts', (req, res) => {
       res.status(500).json({ error: 'Database error occured' });
       return
     } else {
-      res.status(200).json('Inserted!');
+      res.status(200).json(rows);
     }
   });
 });
@@ -76,7 +76,7 @@ app.put('/posts/:id', (req, res) => {
     } else if (rows.affectedRows === 0) {
       res.status(404).json({ error: `Post with given ID does not exists` });
     } else {
-      res.status(200).json(`Updated`);
+      res.status(200).json(rows);
     }
   });
 });
@@ -86,14 +86,13 @@ app.put('/posts/:id', (req, res) => {
 //Upvote, just needs an ID in URL
 app.put('/posts/:id/upvote', (req, res) => {
   conn.query(`UPDATE posts_table SET score = score + 1 WHERE id = (?);`, [req.params.id], (err, rows) => {
-    console.log(rows);
     if (err) {
       res.status(500).json({ error: 'Database error occured' });
       return
     } else if (rows.affectedRows === 0) {
       res.status(404).json({ error: `Post with given ID does not exists` });
     } else {
-      res.status(200).json('Upvoted!');
+      res.status(200).json(rows);
     }
   });
 });
@@ -107,7 +106,7 @@ app.put('/posts/:id/downvote', (req, res) => {
     } else if (rows.affectedRows === 0) {
       res.status(404).json({ error: `Post with given ID does not exists` });
     } else {
-      res.status(200).json('Downvoted!');
+      res.status(200).json(rows);
     }
   });
 });
@@ -123,7 +122,7 @@ app.delete('/posts/:id', (req, res) => {
       res.status(404).json({ error: `Post with given ID does not exists` });
     }
     else {
-      res.status(200).json('Deleted!');
+      res.status(200).json(rows);
     }
   })
 })
@@ -133,11 +132,3 @@ app.delete('/posts/:id', (req, res) => {
 app.listen(3000, () => {
   console.log('Server is ONLINE at http://localhost:3000/');
 })
-
-
-
-//Get posts endpoint  /posts
-//Get uniq post endpoint /posts/:id
-//Downvote endpoint /posts/:id/downvote
-//Upvote   endpoint /posts/:id/upvote
-//Add posts endpoint  /posts
