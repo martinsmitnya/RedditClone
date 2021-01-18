@@ -67,6 +67,21 @@ app.post('/posts', (req, res) => {
   });
 });
 
+//Update a post
+app.put('/posts/:id', (req, res) => {
+  conn.query(`UPDATE posts_table SET title = (?), url = (?) WHERE id = (?);`, [req.body.title, req.body.url, req.params.id], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'Database error occured' });
+      return
+    } else if (rows.affectedRows === 0) {
+      res.status(404).json({ error: `Post with given ID does not exists` });
+    } else {
+      res.status(200).json(`Title updated to ${req.body.title}, URL updated to ${req.body.url}`);
+    }
+  });
+});
+
+
 
 //Upvote, just needs an ID in URL
 app.put('/posts/:id/upvote', (req, res) => {
