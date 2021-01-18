@@ -52,12 +52,12 @@ app.get('/posts/:id', (req, res) => {
   })
 })
 
-//POST request, input body = [{"title":"otherDummyTtitle","url":"www.dummy.com"}], ID, Timestamp and score auto generated
+//POST request, input body = {"title":"otherDummyTtitle","url":"www.dummy.com"}, ID, Timestamp and score auto generated
 app.post('/posts', (req, res) => {
   //Set current time here and we parse it into the SQL values instead of '?'
   let currentTime = new Date();
   let time = parseInt(currentTime.getTime() / 1000);
-  conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ${time});`, [req.body[0].title, req.body[0].url], (err, rows) => {
+  conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ${time});`, [req.body.title, req.body.url], (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'Database error occured' });
       return
@@ -67,7 +67,7 @@ app.post('/posts', (req, res) => {
   });
 });
 
-//Update a post
+//Update a post  input body {"title":"UPDATED","url":"www.UPDATED.com"}
 app.put('/posts/:id', (req, res) => {
   conn.query(`UPDATE posts_table SET title = (?), url = (?) WHERE id = (?);`, [req.body.title, req.body.url, req.params.id], (err, rows) => {
     if (err) {
@@ -76,7 +76,7 @@ app.put('/posts/:id', (req, res) => {
     } else if (rows.affectedRows === 0) {
       res.status(404).json({ error: `Post with given ID does not exists` });
     } else {
-      res.status(200).json(`Title updated to ${req.body.title}, URL updated to ${req.body.url}`);
+      res.status(200).json(`Updated`);
     }
   });
 });
@@ -112,7 +112,7 @@ app.put('/posts/:id/downvote', (req, res) => {
   });
 });
 
-//DELETE
+//DELETE, just needs an ID in URL
 app.delete('/posts/:id', (req, res) => {
   conn.query(`DELETE FROM posts_table WHERE id = ?;`, [req.params.id], (err, rows) => {
     if (err) {
