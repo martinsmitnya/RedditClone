@@ -97,7 +97,21 @@ app.put('/posts/:id/downvote', (req, res) => {
   });
 });
 
-
+//DELETE
+app.delete('/posts/:id', (req, res) => {
+  conn.query(`DELETE FROM posts_table WHERE id = ?;`, [req.params.id], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'Database error occured' });
+      return
+    }
+    else if (rows.affectedRows === 0) {
+      res.status(404).json({ error: `Post with given ID does not exists` });
+    }
+    else {
+      res.status(200).json('Deleted!');
+    }
+  })
+})
 
 
 
