@@ -54,7 +54,7 @@ app.get('/posts/:id', (req, res) => {
 
 //POST request, input body = [{"title":"otherDummyTtitle","url":"www.dummy.com"}], ID, Timestamp and score auto generated
 app.post ('/posts', (req, res) => {
-  //Set current time here and we parse it into the SQL values inest of '?'
+  //Set current time here and we parse it into the SQL values instead of '?'
   let currentTime = new Date();
   let time = parseInt(currentTime.getTime()/1000);
 conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ${time});`, [req.body[0].title, req.body[0].url], (err, rows) => {
@@ -67,9 +67,30 @@ conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ${time
   });
 });
 
-//Downvote endpoint /posts/:id/downvote
-//Upvote   endpoint /posts/:id/upvote
 
+//Upvote, just needs an ID in URL
+app.put('/posts/:id/upvote', (req, res) => {
+  conn.query(`UPDATE posts_table SET score = score + 1 WHERE id = (?);`, [req.params.id], (err, rows) => {
+    if (err) {
+      res.status(500).json({error: 'Database error occured'});
+      return
+    } else {
+      res.status(200).json('Upvoted!');
+    }
+  });
+});
+
+//Downvote, just needs an ID in URL
+app.put('/posts/:id/downvote', (req, res) => {
+  conn.query(`UPDATE posts_table SET score = score - 1 WHERE id = (?);`, [req.params.id], (err, rows) => {
+    if (err) {
+      res.status(500).json({error: 'Database error occured'});
+      return
+    } else {
+      res.status(200).json('Downvoted!');
+    }
+  });
+});
 
 
 
@@ -83,4 +104,6 @@ app.listen(3000, () => {
 
 //Get posts endpoint  /posts
 //Get uniq post endpoint /posts/:id
+//Downvote endpoint /posts/:id/downvote
+//Upvote   endpoint /posts/:id/upvote
 //Add posts endpoint  /posts
