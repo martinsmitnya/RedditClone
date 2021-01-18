@@ -32,7 +32,7 @@ app.get('/posts', (req, res) => {
       res.status(500).json({error: 'Database error occured'});
       return
     } else {
-      res.json(rows);
+      res.status(200).json(rows);
     }
   })
 })
@@ -47,24 +47,26 @@ app.get('/posts/:id', (req, res) => {
       res.status(404).json({error: `Post with given ID does not exists`});
     } 
     else {
-      res.json(rows);
+      res.status(200).json(rows);
     }
   })
 })
 
-//POST request, input body = [{"title":"otherDummyTtitle","url":"www.dummy.com","timestamp":333}], ID andscore auto generated
+//POST request, input body = [{"title":"otherDummyTtitle","url":"www.dummy.com"}], ID, Timestamp and score auto generated
 app.post ('/posts', (req, res) => {
-  conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ?);`, [req.body[0].title, req.body[0].url, req.body[0].timestamp], (err, rows) => {
+  //Set current time here and we parse it into the SQL values inest of '?'
+  let currentTime = new Date();
+  let time = parseInt(currentTime.getTime()/1000);
+conn.query(`INSERT INTO posts_table (title, url, timestamp) VALUES (?, ?, ${time});`, [req.body[0].title, req.body[0].url], (err, rows) => {
     if (err) {
       res.status(500).json({error: 'Database error occured'});
       return
     } else {
-      res.json('Inserted!');
+      res.status(200).json('Inserted!');
     }
   });
 });
 
-//Add posts endpoint  /posts
 //Downvote endpoint /posts/:id/downvote
 //Upvote   endpoint /posts/:id/upvote
 
@@ -81,3 +83,4 @@ app.listen(3000, () => {
 
 //Get posts endpoint  /posts
 //Get uniq post endpoint /posts/:id
+//Add posts endpoint  /posts
