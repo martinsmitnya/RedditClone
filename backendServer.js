@@ -131,5 +131,5 @@ app.delete('/posts/:id', (req, res) => {
 
 
 app.listen(3000, () => {
-  console.log('Server is ONLINE at http://localhost:3000/');
+  console.log('Server is ONLINE at 3000');
 })
