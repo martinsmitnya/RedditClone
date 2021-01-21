@@ -4,14 +4,15 @@ const app = express();
 const mysql = require('mysql');
 app.use(express.json());
 app.use(express.static('public'));
+require('dotenv').config()
 ////////////////////////////////////////////////////////////////
 
 const conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
-  database: 'redditclone',
-  insecureAuth: 'true',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
+  insecureAuth: process.env.DB_AUTH,
 });
 
 conn.connect((err) => {
